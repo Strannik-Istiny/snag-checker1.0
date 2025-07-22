@@ -21,9 +21,10 @@ export default function BasketForm({ onResult }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      {prices.products.map(p => (
-        <label key={p}>
+  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    {prices.products.map(p => (
+      <div key={p} style={{ marginBottom: 8 }}>
+        <label>
           {p}:{' '}
           <input
             type="number"
@@ -32,8 +33,11 @@ export default function BasketForm({ onResult }) {
             style={{ width: 60 }}
           />
         </label>
-      ))}
-      <button onClick={calc} style={{ width: 120 }}>Сравнить</button>
-    </div>
-  );
+      </div>
+    ))}
+    <button onClick={calc} style={{ width: 120 }}>
+      Сравнить
+    </button>
+  </div>
+);
 }
