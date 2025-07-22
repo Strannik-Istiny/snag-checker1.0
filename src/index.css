@@ -1,1 +1,4 @@
-
+/* просто чтобы Vite не падал */
+body {
+  font-family: system-ui, sans-serif;
+}
