@@ -1,18 +1,32 @@
+import React from 'react';
+import prices from '../data/prices.json';
+
 export default function PriceTable({ data }) {
   return (
-    <table style={{borderCollapse:'collapse',width:'100%',marginTop:16}}>
-  <thead style={{background:'#e2e8f0'}}>
-    ...
-  </thead>
-  <tbody>
-    {data.map(r=>(
-      <tr key={r.country} style={{borderBottom:'1px solid #e2e8f0'}}>
-        <td style={{padding:8}}>{r.country}</td>
-        <td style={{padding:8}}>{r.cost.toFixed(0)} ₽</td>
-        <td style={{padding:8}}>{r.baskets}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+    <table>
+      <thead>
+        <tr>
+          <th>Страна</th>
+          <th>Цена</th>
+          <th>Корзин на з/п</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.map(r => {
+          const idx = prices.countries.indexOf(r.country);
+          const name = prices.countryNames[idx];
+          const currency = prices.currencies[idx];
+          const priceRub = r.cost / 1000;
+          const baskets = Math.floor((prices.salaries[r.country] || 0) / priceRub);
+          return (
+            <tr key={r.country}>
+              <td>{name}</td>
+              <td>{priceRub.toFixed(2)} {currency}</td>
+              <td>{baskets}</td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
   );
 }
