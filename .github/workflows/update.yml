@@ -1,1 +1,20 @@
-
+name: Daily update
+on:
+  schedule:
+    - cron: '0 8 * * *'
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node functions/update-rates.cli.js
+      - run: node functions/update-salaries.cli.js
+      - run: |
+          git config --global user.name 'bot'
+          git config --global user.email 'bot@example.com'
+          git add src/rates.json src/salaries.json
+          git commit -m "daily rates & salaries" || true
+          git push
