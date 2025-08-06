@@ -1,35 +1,34 @@
 import React from 'react';
-import prices from '../data/prices.json';
-import rates from '../rates.json';
+import { Table, Thead, Tbody, Tr, Th, Td, TableContainer, Badge } from '@chakra-ui/react';
 
-export default function PriceTable({ basket }) {
+export default function PriceTable({ data }) {
+  const bestCountry = data.reduce((a, b) => (a.baskets > b.baskets ? a : b));
+
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Страна</th>
-          <th>Корзина, ₽</th>
-          <th>Зарплата, ₽</th>
-          <th>Корзин на з/п</th>
-        </tr>
-      </thead>
-      <tbody>
-        {prices.countries.map((cc, idx) => {
-          const basketLocal = prices.products.reduce((s, p) => s + prices.localPrices[p][idx], 0);
-          const rate = rates[cc] || 1;
-          const basketRub = Math.round(basketLocal * rate);
-          const salaryRub = Math.round(prices.localSalaries[cc] * rate);
-          const baskets = Math.floor(salaryRub / basketRub);
-          return (
-            <tr key={cc}>
-              <td>{prices.countryNames[idx]}</td>
-              <td>{basketRub.toLocaleString()}</td>
-              <td>{salaryRub.toLocaleString()}</td>
-              <td>{baskets.toLocaleString()}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <TableContainer mt={8} bg="white" p={4} borderRadius="lg" shadow="md">
+      <Table variant="simple">
+        <Thead>
+          <Tr>
+            <Th>Страна</Th>
+            <Th isNumeric>Цена</Th>
+            <Th isNumeric>Корзин на з/п</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {data.map((row) => (
+            <Tr key={row.country} bg={row.country === bestCountry.country ? 'green.50' : 'white'}>
+              <Td>
+                {row.country}
+                {row.country === bestCountry.country && (
+                  <Badge ml="2" colorScheme="green">лучше</Badge>
+                )}
+              </Td>
+              <Td isNumeric>{row.cost.toFixed(0)} {row.currency}</Td>
+              <Td isNumeric>{row.baskets}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </TableContainer>
   );
 }
